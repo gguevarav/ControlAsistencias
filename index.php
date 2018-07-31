@@ -84,14 +84,18 @@
 										$_SESSION['Usuario'] = $ResultadoConsulta['NombreUsuario'];
 										$_SESSION['ContrasenaUsuario'] = $password;
 										$_SESSION['idUsuario'] = $ResultadoConsulta['idUsuario'];
+										$_SESSION['idPersona'] = $ResultadoConsultaPersona['idPersona'];
 										$_SESSION['PrivilegioUsuario'] = $RolUsuario;
-										if($RolUsuario == "Administrador"){
-											header("location:Administrador.php");
+										if($RolUsuario == "Superadmin"){
+											header("location:Principal.php");
 										}
-											else if($RolUsuario == "Catedratico"){
-												header("location:Catedratico.php");
+											else if($RolUsuario == "Administrador"){
+												header("location:Administrador.php");
 											}
-												else if($RolUsuario == "Estudiante"){
+												else if($RolUsuario == "Catedratico"){
+													header("location:Catedratico.php");
+												}
+													else if($RolUsuario == "Estudiante"){
 													header("location:Estudiante.php");
 												}
 									}

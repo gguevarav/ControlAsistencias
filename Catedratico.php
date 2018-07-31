@@ -19,7 +19,7 @@
 		// Incluimos el archivo que valida si hay una sesión activa
 		include_once "Seguridad/seguro.php";
 		// Si en la sesión activa tiene privilegios de Catedrático o superadministrador puede ver el formulario
-		if($_SESSION["PrivilegioUsuario"] == 'Catedrático' || $_SESSION["PrivilegioUsuario"] == 'Superadmin'){
+		if($_SESSION["PrivilegioUsuario"] == 'Catedratico' || $_SESSION["PrivilegioUsuario"] == 'Superadmin'){
 			// Guardamos el nombre del usuario en una variable
 			$NombreUsuario =$_SESSION["NombreUsuario"];
 		?>

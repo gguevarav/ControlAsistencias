@@ -33,15 +33,30 @@
 				<!-- Menú -->
 				<div>
 					<ul>
-						<li><a href="RegistrarCurso.php">Registrar curso</a></li>
-						<li><a href="#">Registrar estudiante</a></li>
-						<li><a href="AcercaDe.php">Acerca de...</a></li>
-						<li><a href="Seguridad/logout.php">Cerrar Sesión</a></li>
+						<?php
+							if($_SESSION["PrivilegioUsuario"] == 'Superadmin'){
+								?>
+								<li><a href="RegistrarCurso.php">Registrar curso</a></li>
+								<li><a href="#">Registrar estudiante</a></li>
+								<li><a href="ActivarFecha.php">ActivarFecha</a></li>
+								<li><a href="DesactivarFecha.php">DesactivarFecha</a></li>
+								<li><a href="AcercaDe.php">Acerca de...</a></li>
+								<li><a href="Seguridad/logout.php">Cerrar Sesión</a></li>
+							<?php
+							}else{
+								?>
+								<li><a href="RegistrarCurso.php">Registrar curso</a></li>
+								<li><a href="#">Registrar estudiante</a></li>
+								<li><a href="AcercaDe.php">Acerca de...</a></li>
+								<li><a href="Seguridad/logout.php">Cerrar Sesión</a></li>
+								<?php
+							}
+						?>
 					</ul>
 				</div>
 				<hr>
-				<di v>
-					<form name="CrearUsuario" action="RegistrarCurso.php" method="post">
+				<div>
+					<form name="CrearUsuario" action="RegistrarEstudiante.php" method="post">
 						<div>
 							<!-- Título -->
 							<div>
@@ -98,7 +113,7 @@
 							<!-- Rol del usuario -->
 							<div>
 								<label>Rol que deberá tener el usuario:</label>
-								<select name="Curso1" id="Curso1">
+								<select name="Rol" id="Rol">
 									<option value="" disabled selected>Seleccione un rol</option>
 									<option value="Administrador">Administrador</option>
 									<option value="Catedratico">Catedrático</option>
@@ -109,19 +124,21 @@
 							<div>
 								<h3>Si es estudiante deberá asignarle cursos</h3>
 							</div>
+							<?php
+								// Creamos la consulta
+								$SelectCursos = "SELECT idCurso, NombreCurso FROM Curso;";
+							?>
 							<!-- Curso 1 -->
 							<div>
 								<label>Seleccione el primer curso a recibir:</label>
 								<select name="Curso1" id="Curso1">
 									<option value="" disabled selected>Seleccione un curso</option>
 									<?php
-										// Creamos la consulta
-										$SelectCursos = "SELECT idCurso, CodigoCurso FROM Curso;";
 										// Ejecutamos la consulta
 										$ResultadoConsulta = $mysqli->query($SelectCursos);
 										while($row = mysqli_fetch_array($ResultadoConsulta)){
 											?>
-											<option value="<?php echo $row['idCurso']; ?>"><?php echo $row['CodigoCurso']; ?> </option>
+											<option value="<?php echo $row['idCurso']; ?>"><?php echo $row['NombreCurso']; ?> </option>
 											<?php
 										}
 									?>
@@ -134,13 +151,11 @@
 								<select name="Curso2" id="Curso2">
 									<option value="" disabled selected>Seleccione un curso</option>
 									<?php
-										// Creamos la consulta
-										$SelectCursos = "SELECT idCurso, CodigoCurso FROM Curso;";
 										// Ejecutamos la consulta
 										$ResultadoConsulta = $mysqli->query($SelectCursos);
 										while($row = mysqli_fetch_array($ResultadoConsulta)){
 											?>
-											<option value="<?php echo $row['idCurso']; ?>"><?php echo $row['CodigoCurso']; ?> </option>
+											<option value="<?php echo $row['idCurso']; ?>"><?php echo $row['NombreCurso']; ?> </option>
 											<?php
 										}
 									?>
@@ -153,13 +168,11 @@
 								<select name="Curso3" id="Curso3">
 									<option value="" disabled selected>Seleccione un curso</option>
 									<?php
-										// Creamos la consulta
-										$SelectCursos = "SELECT idCurso, CodigoCurso FROM Curso;";
 										// Ejecutamos la consulta
 										$ResultadoConsulta = $mysqli->query($SelectCursos);
 										while($row = mysqli_fetch_array($ResultadoConsulta)){
 											?>
-											<option value="<?php echo $row['idCurso']; ?>"><?php echo $row['CodigoCurso']; ?> </option>
+											<option value="<?php echo $row['idCurso']; ?>"><?php echo $row['NombreCurso']; ?> </option>
 											<?php
 										}
 									?>
@@ -172,13 +185,11 @@
 								<select name="Curso4" id="Curso4">
 									<option value="" disabled selected>Seleccione un curso</option>
 									<?php
-										// Creamos la consulta
-										$SelectCursos = "SELECT idCurso, CodigoCurso FROM Curso;";
 										// Ejecutamos la consulta
 										$ResultadoConsulta = $mysqli->query($SelectCursos);
 										while($row = mysqli_fetch_array($ResultadoConsulta)){
 											?>
-											<option value="<?php echo $row['idCurso']; ?>"><?php echo $row['CodigoCurso']; ?> </option>
+											<option value="<?php echo $row['idCurso']; ?>"><?php echo $row['NombreCurso']; ?> </option>
 											<?php
 										}
 									?>
@@ -191,13 +202,11 @@
 								<select name="Curso5" id="Curso5">
 									<option value="" disabled selected>Seleccione un curso</option>
 									<?php
-										// Creamos la consulta
-										$SelectCursos = "SELECT idCurso, CodigoCurso FROM Curso;";
 										// Ejecutamos la consulta
 										$ResultadoConsulta = $mysqli->query($SelectCursos);
 										while($row = mysqli_fetch_array($ResultadoConsulta)){
 											?>
-											<option value="<?php echo $row['idCurso']; ?>"><?php echo $row['CodigoCurso']; ?> </option>
+											<option value="<?php echo $row['idCurso']; ?>"><?php echo $row['NombreCurso']; ?> </option>
 											<?php
 										}
 									?>
@@ -214,21 +223,122 @@
 				<?php
 					if(isset($_POST['Registrar'])){
 						// Obtenemos los valores de todos los campos y los almacenamos en variables
-						$Semestre=$_POST['Semestre'];
-						$Anio=$_POST['Anio'];
-						$CodigoCarrera=$_POST['CodigoCarrera'];
-						$CodigoCurso=$_POST['CodigoCurso'];
-						$Seccion=$_POST['Seccion'];
-						
-						// Creamos la consulta para la insersión de los datos
-						$InsertCurso = "INSERT INTO Curso(SemestreCurso, AnioCurso, CodigoCarreraCurso, CodigoCurso, SeccionCurso)
-												  Values('".$Semestre."', '".$Anio."', '".$CodigoCarrera."', '".$CodigoCurso."', '".$Seccion."')";
-						
-						if(!$resultado = $mysqli->query($InsertCurso)){
-							echo "Error: La ejecución de la consulta falló debido a: \n";
-							echo "Query: " . $InsertCurso . "\n";
-							echo "Error: " . $mysqli->errno . "\n";
-							exit;
+						$Nombres=$_POST['Nombres'];
+						$Apellidos=$_POST['Apellidos'];
+						$CarnetEstudiante=$_POST['CarnetEstudiante'];
+						$Correo=$_POST['Correo'];
+						$NombreUsuario=$_POST['NombreUsuario'];
+						$Contrasena=$_POST['Contrasena'];
+						$Contrasena1=$_POST['Contrasena1'];
+						$Rol=$_POST['Rol'];
+						if($Contrasena == $Contrasena1){
+							// Primero encriptamos la contrasenia
+							$ContraseniaEncriptada = md5($Contrasena);
+							if($Rol == "Estudiante"){
+								if(isset($_POST['Curso1']) && isset($_POST['Curso2']) && isset($_POST['Curso3']) && isset($_POST['Curso4']) && isset($_POST['Curso5'])){
+									$Curso1=$_POST['Curso1'];
+									$Curso2=$_POST['Curso2'];
+									$Curso3=$_POST['Curso3'];
+									$Curso4=$_POST['Curso4'];
+									$Curso5=$_POST['Curso5'];
+									// Creamos la consulta para la insersión de los datos
+									$InsertPersona = "INSERT INTO persona(NombrePersona, ApellidoPersona, CarnetPersona, CorreoPersona)
+															  Values('".$Nombres."', '".$Apellidos."', '".$CarnetEstudiante."', '".$Correo."')";
+									
+									if(!$resultado = $mysqli->query($InsertPersona)){
+										echo "Error: La ejecución de la consulta falló debido a: \n";
+										echo "Query: " . $InsertPersona . "\n";
+										echo "Error: " . $mysqli->errno . "\n";
+										exit;
+									}
+									
+									$idUltimaPersona = mysqli_insert_id($mysqli);
+									
+									// Creamos la consulta para la insersión de los datos
+									$InsertUsuario = "INSERT INTO usuario(NombreUsuario, ContraseniaUsuario, idPersona, RolUsuario)
+															  Values('".$NombreUsuario."', '".$ContraseniaEncriptada."', ".$idUltimaPersona.", '".$Rol."')";
+									
+									if(!$resultado = $mysqli->query($InsertUsuario)){
+										echo "Error: La ejecución de la consulta falló debido a: \n";
+										echo "Query: " . $InsertUsuario . "\n";
+										echo "Error: " . $mysqli->errno . "\n";
+										exit;
+									}
+									// Curso 1
+									$InsertCurso1 = "INSERT INTO CursosAsignados(idCurso, idPersona)
+														  Values(".$Curso1.", ".$idUltimaPersona.")";
+									if(!$resultado = $mysqli->query($InsertCurso1)){
+										echo "Error: La ejecución de la consulta falló debido a: \n";
+										echo "Query: " . $InsertCurso1 . "\n";
+										echo "Error: " . $mysqli->errno . "\n";
+										exit;
+									}
+									//Curso 2
+									$InsertCurso2 = "INSERT INTO CursosAsignados(idCurso, idPersona)
+														  Values(".$Curso2.", ".$idUltimaPersona.")";
+									if(!$resultado = $mysqli->query($InsertCurso2)){
+										echo "Error: La ejecución de la consulta falló debido a: \n";
+										echo "Query: " . $InsertCurso2 . "\n";
+										echo "Error: " . $mysqli->errno . "\n";
+										exit;
+									}
+									// Curso 3
+									$InsertCurso3 = "INSERT INTO CursosAsignados(idCurso, idPersona)
+														  Values(".$Curso1.", ".$idUltimaPersona.")";
+									if(!$resultado = $mysqli->query($InsertCurso3)){
+										echo "Error: La ejecución de la consulta falló debido a: \n";
+										echo "Query: " . $InsertCurso3 . "\n";
+										echo "Error: " . $mysqli->errno . "\n";
+										exit;
+									}
+									// Curso 4
+									$InsertCurso4 = "INSERT INTO CursosAsignados(idCurso, idPersona)
+														  Values(".$Curso4.", ".$idUltimaPersona.")";
+									if(!$resultado = $mysqli->query($InsertCurso4)){
+										echo "Error: La ejecución de la consulta falló debido a: \n";
+										echo "Query: " . $InsertCurso4 . "\n";
+										echo "Error: " . $mysqli->errno . "\n";
+										exit;
+									}
+									// Curso 5
+									$InsertCurso5 = "INSERT INTO CursosAsignados(idCurso, idPersona)
+														  Values(".$Curso5.", ".$idUltimaPersona.")";
+									if(!$resultado = $mysqli->query($InsertCurso5)){
+										echo "Error: La ejecución de la consulta falló debido a: \n";
+										echo "Query: " . $InsertCurso5 . "\n";
+										echo "Error: " . $mysqli->errno . "\n";
+										exit;
+									}
+								}else{
+									echo "<script languaje='javascript'>
+											alert('Debe asignarle cursos a un estudiante');
+										  </script>";
+								}
+							}else{
+								// Creamos la consulta para la insersión de los datos
+								$InsertPersona = "INSERT INTO persona(NombrePersona, ApellidoPersona, CarnetPersona, CorreoPersona)
+														  Values('".$Nombres."', '".$Apellidos."', '".$CarnetEstudiante."', '".$Correo."')";
+								if(!$resultado = $mysqli->query($InsertPersona)){
+									echo "Error: La ejecución de la consulta falló debido a: \n";
+									echo "Query: " . $InsertPersona . "\n";
+									echo "Error: " . $mysqli->errno . "\n";
+									exit;
+								}
+								
+								// Creamos la consulta para la insersión de los datos
+								$InsertUsuario = "INSERT INTO usuario(NombreUsuario, ContraseniaUsuario, idPersona, RolUsuario)
+														  Values('".$NombreUsuario."', '".$ContraseniaEncriptada."', ".mysqli_insert_id($mysqli).", '".$Rol."')";
+								if(!$resultado = $mysqli->query($InsertUsuario)){
+									echo "Error: La ejecución de la consulta falló debido a: \n";
+									echo "Query: " . $InsertUsuario . "\n";
+									echo "Error: " . $mysqli->errno . "\n";
+									exit;
+								}
+							}
+						}else{
+							echo "<script languaje='javascript'>
+									alert('Las contraseñas no coinciden');
+								  </script>";
 						}
 					}
 				?>

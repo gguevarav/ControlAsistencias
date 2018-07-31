@@ -33,15 +33,30 @@
 				<!-- Menú -->
 				<div>
 					<ul>
-						<li><a href="#">Registrar curso</a></li>
-						<li><a href="RegistrarEstudiante.php">Registrar estudiante</a></li>
-						<li><a href="AcercaDe.php">Acerca de...</a></li>
-						<li><a href="Seguridad/logout.php">Cerrar Sesión</a></li>
+						<?php
+							if($_SESSION["PrivilegioUsuario"] == 'Superadmin'){
+								?>
+								<li><a href="#">Registrar curso</a></li>
+								<li><a href="RegistrarEstudiante.php">Registrar estudiante</a></li>
+								<li><a href="ActivarFecha.php">ActivarFecha</a></li>
+								<li><a href="DesactivarFecha.php">DesactivarFecha</a></li>
+								<li><a href="AcercaDe.php">Acerca de...</a></li>
+								<li><a href="Seguridad/logout.php">Cerrar Sesión</a></li>
+							<?php
+							}else{
+								?>
+								<li><a href="#">Registrar curso</a></li>
+								<li><a href="RegistrarEstudiante.php">Registrar estudiante</a></li>
+								<li><a href="AcercaDe.php">Acerca de...</a></li>
+								<li><a href="Seguridad/logout.php">Cerrar Sesión</a></li>}
+								<?php
+							}
+						?>
 					</ul>
 				</div>
 				<hr>
 				<di v>
-					<form name="CrearUsuario" action="RegistrarCurso.php" method="post">
+					<form name="RegistrarCurso" action="RegistrarCurso.php" method="post">
 						<div>
 							<!-- Título -->
 							<div>
@@ -50,7 +65,15 @@
 							<!-- Semestre/Trimestre/Bimestre -->
 							<div>
 								<label>Semestre/Trimestre/Bimestre:</label>
-								<input type="text" name="Semestre" placeholder="Semestre/Trimestre/Bimestre" id="Semestre" required>
+								<select name="Semestre" id="Semestre">
+									<option value="" disabled selected>0</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+									<option value="4">4</option>
+									<option value="5">5</option>
+									<option value="6">6</option>
+								</select>
 							</div>
 							<br>
 							<!-- Año -->
@@ -83,6 +106,29 @@
 								<input type="text" name="Seccion" placeholder="Sección" id="CodigoCurso" required>
 							</div>
 							<br>
+							<!-- Cetedrático -->
+							<div>
+								<label>Catedrático:</label>
+								<select name="CatedraticoCurso" id="CatedraticoCurso">
+									<option value="" disabled selected>Seleccione un catedrático</option>
+									<?php
+										// Creamos la consulta
+										$SelectUsuarios = "SELECT idPersona FROM Usuario WHERE RolUsuario='Catedratico';";
+										// Ejecutamos la consulta
+										$ResultadoConsulta = $mysqli->query($SelectUsuarios);
+										while($row = mysqli_fetch_array($ResultadoConsulta)){
+											// Creamos la consulta
+											$SelectPersona = "SELECT idPersona, NombrePersona FROM persona WHERE idPersona=".$row['idPersona'].";";
+											$ResultadoConsulta2 = $mysqli->query($SelectPersona);
+											$row2 = mysqli_fetch_array($ResultadoConsulta2)
+											?>
+											<option value="<?php echo $row2['idPersona']; ?>"><?php echo $row2['NombrePersona']; ?> </option>
+											<?php
+										}
+									?>
+								</select>
+							</div>
+							<br>
 							<!-- Resgistrar -->
 							<div>
 								<button type="submit" id="Registrar" name="Registrar">Registrar</button>
@@ -97,11 +143,13 @@
 						$Anio=$_POST['Anio'];
 						$CodigoCarrera=$_POST['CodigoCarrera'];
 						$CodigoCurso=$_POST['CodigoCurso'];
+						$NombreCurso=$_POST['NombreCurso'];
 						$Seccion=$_POST['Seccion'];
+						$CatedraticoCurso=$_POST['CatedraticoCurso'];
 						
 						// Creamos la consulta para la insersión de los datos
-						$InsertCurso = "INSERT INTO Curso(SemestreCurso, AnioCurso, CodigoCarreraCurso, CodigoCurso, SeccionCurso)
-												  Values('".$Semestre."', '".$Anio."', '".$CodigoCarrera."', '".$CodigoCurso."', '".$Seccion."')";
+						$InsertCurso = "INSERT INTO Curso(SemestreCurso, AnioCurso, CodigoCarreraCurso, CodigoCurso, NombreCurso, SeccionCurso, CatedraticoCurso)
+												  Values('".$Semestre."', '".$Anio."', '".$CodigoCarrera."', '".$CodigoCurso."', '".$NombreCurso."', '".$Seccion."', ".$CatedraticoCurso.")";
 						
 						if(!$resultado = $mysqli->query($InsertCurso)){
 							echo "Error: La ejecución de la consulta falló debido a: \n";
