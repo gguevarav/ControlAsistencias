@@ -48,7 +48,7 @@
 								<li><a href="#">Registrar curso</a></li>
 								<li><a href="RegistrarEstudiante.php">Registrar estudiante</a></li>
 								<li><a href="AcercaDe.php">Acerca de...</a></li>
-								<li><a href="Seguridad/logout.php">Cerrar Sesión</a></li>}
+								<li><a href="Seguridad/logout.php">Cerrar Sesión</a></li>
 								<?php
 							}
 						?>
@@ -120,7 +120,7 @@
 											// Creamos la consulta
 											$SelectPersona = "SELECT idPersona, NombrePersona FROM persona WHERE idPersona=".$row['idPersona'].";";
 											$ResultadoConsulta2 = $mysqli->query($SelectPersona);
-											$row2 = mysqli_fetch_array($ResultadoConsulta2)
+											$row2 = mysqli_fetch_array($ResultadoConsulta2);
 											?>
 											<option value="<?php echo $row2['idPersona']; ?>"><?php echo $row2['NombrePersona']; ?> </option>
 											<?php
@@ -156,7 +156,9 @@
 							echo "Query: " . $InsertCurso . "\n";
 							echo "Error: " . $mysqli->errno . "\n";
 							exit;
-						}
+						}echo "<script languaje='javascript'>
+								alert('Curso registrado exitosamente');
+							   </script>";
 					}
 				?>
 				<!-- Pie de página, se utilizará el mismo para todos. -->

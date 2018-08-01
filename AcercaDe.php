@@ -18,7 +18,7 @@
 	<?php
 		// Incluimos el archivo que valida si hay una sesión activa
 		include_once "Seguridad/seguro.php";
-		// Si en la sesión activa tiene privilegios de Catedrático o superadministrador puede ver el formulario
+		// Si en la sesión activa tiene cualquier privilegio puede ver el formulario
 		if($_SESSION["PrivilegioUsuario"] == 'Catedratico' ||
 		   $_SESSION["PrivilegioUsuario"] == 'Estudiante' ||
 		   $_SESSION["PrivilegioUsuario"] == 'Administrador' ||
@@ -54,9 +54,10 @@
 							}
 								?>
 					</ul>
+				<hr>
 				</div>
 					<div>
-						<div class="input-group input-group-lg">
+						<div>
 							<h2>Sistema para registro de asistencias UMG Morales</h2>
 							<h4>Universidad Mariano Gálvez</h4>
 							<h4>Morales Izabal</h4>

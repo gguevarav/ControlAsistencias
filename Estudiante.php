@@ -18,7 +18,7 @@
 	<?php
 		// Incluimos el archivo que valida si hay una sesión activa
 		include_once "Seguridad/seguro.php";
-		// Si en la sesión activa tiene privilegios de Catedrático o superadministrador puede ver el formulario
+		// Si en la sesión activa tiene privilegios de estudiante o superadministrador puede ver el formulario
 		if($_SESSION["PrivilegioUsuario"] == 'Estudiante' || $_SESSION["PrivilegioUsuario"] == 'Superadmin'){
 			// Guardamos el nombre del usuario en una variable
 			$NombreUsuario =$_SESSION["NombreUsuario"];
@@ -31,7 +31,7 @@
 				<!-- Menú -->
 				<div>
 					<ul>
-						<li><a href="ActivarFecha.php">Marcar asistencia</a></li>
+						<li><a href="MarcarAsistencia.php">Marcar asistencia</a></li>
 						<li><a href="AcercaDe.php">Acerca de...</a></li>
 						<li><a href="Seguridad/logout.php">Cerrar Sesión</a></li>
 					</ul>

@@ -308,6 +308,10 @@
 										echo "Query: " . $InsertCurso5 . "\n";
 										echo "Error: " . $mysqli->errno . "\n";
 										exit;
+									}else{
+									echo "<script languaje='javascript'>
+												alert('Estudiante registrado exitosamente');
+											  </script>";
 									}
 								}else{
 									echo "<script languaje='javascript'>
@@ -333,6 +337,10 @@
 									echo "Query: " . $InsertUsuario . "\n";
 									echo "Error: " . $mysqli->errno . "\n";
 									exit;
+								}else{
+									echo "<script languaje='javascript'>
+											alert('Estudiante registrado exitosamente');
+										  </script>";
 								}
 							}
 						}else{

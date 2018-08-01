@@ -16,7 +16,6 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		</head>
         <body>
-			<!-- Contenedor del ícono del Usuario -->
     		<div>
     			<div>
 					<h2 class="text-center">Inicie sesión</h2>

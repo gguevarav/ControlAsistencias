@@ -1,5 +1,5 @@
 <!--
-	Página para deactivar fechas adminstrada por el caterático
+	Página para deactivar fechas adminstrada por el catedrático
 	Gemis Daniel Guevara Villeda
 	Lunes, 30 de julio del 2018
 	23:15 PM
@@ -93,7 +93,7 @@
 								</select>
 							</div>
 							<br>
-							<!-- Resgistrar -->
+							<!-- Desactivar -->
 							<div>
 								<button type="submit" id="Desactivar" name="Desactivar">Desactivar</button>
 							</div>
@@ -105,7 +105,7 @@
 						// Obtenemos los valores de todos los campos y los almacenamos en variables
 						$FechaDesactivar=$_POST['FechaDesactivar'];
 						
-						// Creamos la consulta para la insersión de los datos
+						// Creamos la consulta para la actualización de los datos
 						$UpdateFechaActivada = "UPDATE fechaasistencia SET EstadoFechaAsistencia='Desactivada'
 																		WHERE idFechaAsistencia=".$FechaDesactivar.";";
 						
@@ -114,6 +114,103 @@
 							echo "Query: " . $UpdateFechaActivada . "\n";
 							echo "Error: " . $mysqli->errno . "\n";
 							exit;
+						}else{
+							// Después de desactivarla debería enviar la asistencia
+							// Consulta para obtener la fecha y el curso para poder crear el archivo
+							$ConsultaInfoFechaInforme = "SELECT FechaFechaAsistencia, CursoFechaAsistencia FROM fechaasistencia
+																										  WHERE idFechaAsistencia=".$FechaDesactivar.";";
+							// Resultado de la consulta
+							$ResultadoConsulta = $mysqli->query($ConsultaInfoFechaInforme);
+							$row = mysqli_fetch_array($ResultadoConsulta);
+							// Consulta para obtener el nombre del curso
+							$ConsultaNombreCurso = "SELECT NombreCurso FROM curso WHERE idCurso=".$row['CursoFechaAsistencia'].";";
+							$ResultadoConsultaNombreCurso = $mysqli->query($ConsultaNombreCurso);
+							$row2 = mysqli_fetch_array($ResultadoConsultaNombreCurso);
+							
+							// Carpeta que contiene los archivos
+							$Carpeta = "reportes/";
+							
+							// Nombre del archivo
+							$archivo_csv = $Carpeta . "asistencia_".$row2['NombreCurso']."_".$row['FechaFechaAsistencia'].".csv";
+							// Creamos el archivo
+							$csv = fopen($archivo_csv, 'x+');
+							// Insertamos to títulos del archivo
+							fputcsv($csv,array ('Carnet','Nombre','Curso'));
+							// Consulta para obtener el estudiante
+							$ConsultaAsistencias = "SELECT EstudianteAsistenciaMarcada FROM asistenciamarcada WHERE FechaAsistenciaMarcada=".$FechaDesactivar.";";
+							$ResultadoConsultaAsistencias = $mysqli->query($ConsultaAsistencias);
+							// Escribimos el archivo
+							while ($fila = mysqli_fetch_array($ResultadoConsultaAsistencias)) {
+								$EstudianteAsistenciaMarcada = $fila['EstudianteAsistenciaMarcada'];
+								// Consulta donde obtendremos el nombre, apellido y carnet del estudiante
+								$SelectInfoEstudiante = "SELECT NombrePersona, ApellidoPersona, CarnetPersona FROM persona WHERE idPersona=".$EstudianteAsistenciaMarcada.";";
+								$ResultadoSelectInfoEstudiante = $mysqli->query($SelectInfoEstudiante);
+								$fila2 = mysqli_fetch_array($ResultadoSelectInfoEstudiante);
+								// Insertamos la informacion en el archivo
+								fputcsv($csv, array($fila2['CarnetPersona'],$fila2['NombrePersona'] . " " . $fila2['ApellidoPersona'],$row2['NombreCurso']));
+							}
+							// Cerramos el archivo
+							fclose($csv);
+							// Enviamos el archivo por correo
+							//recipient
+							// Primero obtendremos la info del usuario para poder enviar el correo
+							$SelectInforPersona = "SELECT NombrePersona, ApellidoPersona, CorreoPersona FROM persona WHERE idPersona=".$idPersona.";";
+							$ResultadoSelectInforPersona = $mysqli->query($SelectInforPersona);
+							$ResultadoFila = mysqli_fetch_array($ResultadoSelectInforPersona);
+							$to = "gemisdguevarav@gmail.com";
+
+							//sender
+							$from = "gemisdguevarav@gmail.com";
+							$fromName = 'tarea3.4890132950.net';
+
+							//email subject
+							$subject = "Asistencia del curso " . $row2['NombreCurso'] . " de la fecha " . $row['FechaFechaAsistencia'];
+
+							//email body content
+							$htmlContent = '<h1>PHP Email with Attachment</h1>
+								<p>This email has sent from PHP script with attachment.</p>';
+
+							//header for sender info
+							$headers = "From: $fromName"." <".$from.">";
+
+							//boundary 
+							$semi_rand = md5(time()); 
+							$mime_boundary = "==Multipart_Boundary_x{$semi_rand}x"; 
+
+							//headers for attachment 
+							$headers .= "nMIME-Version: 1.0n" . "Content-Type: multipart/mixed;n" . " boundary='{$mime_boundary}'"; 
+
+							//multipart boundary 
+							$message = "--{$mime_boundary}n" . "Content-Type: text/html; charset='UTF-8'n" .
+							"Content-Transfer-Encoding: 7bitnn" . $htmlContent . "nn"; 
+
+							//preparing attachment
+							if(!empty($archivo_csv) > 0){
+								if(is_file($archivo_csv)){
+									$message .= "--{$mime_boundary}n";
+									$fp =    @fopen($archivo_csv,"rb");
+									$data =  @fread($fp,filesize($archivo_csv));
+
+									@fclose($fp);
+									$data = chunk_split(base64_encode($data));
+									$message .= "Content-Type: application/octet-stream; name='".basename($archivo_csv)."'n" . 
+									"Content-Description: ".basename($archivo_csv)."n" .
+									"Content-Disposition: attachment;n" . " filename='".basename($archivo_csv)."'; size=".filesize($archivo_csv).";n" . 
+									"Content-Transfer-Encoding: base64nn" . $data . "nn";
+								}
+							}
+							
+							$message .= "--{$mime_boundary}--";
+							$returnpath = "-f" . $from;
+
+							//send email
+							$mail = @mail($to, $subject, $message, $headers, $returnpath); 
+
+							//email sending status
+							echo $mail?"<h1>Mail sent.</h1>":"<h1>Mail sending failed.</h1>";
+							echo "<script languaje='javascript'>
+									alert('Fecha desactivada');
+								  </script>";
 						}
 					}
 				?>

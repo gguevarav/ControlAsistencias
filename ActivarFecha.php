@@ -1,5 +1,5 @@
 <!--
-	Página para activar fechas adminstrada por el caterático
+	Página para activar fechas adminstrada por el catedrático
 	Gemis Daniel Guevara Villeda
 	Lunes, 30 de julio del 2018
 	22:15 PM
@@ -93,7 +93,7 @@
 								</select>
 							</div>
 							<br>
-							<!-- Resgistrar -->
+							<!-- Activar -->
 							<div>
 								<button type="submit" id="Activar" name="Activar">Activar</button>
 							</div>
@@ -112,6 +112,7 @@
 						// Si es verdadero existe una fecha ya registrada, podemos volver a activarla
 						//if($resultado = $mysqli->query($InsertFechaActivada)){
 						//	$row = mysqli_fetch_array($ResultadoConsulta)
+						
 						// Creamos la consulta para la insersión de los datos
 						$InsertFechaActivada = "INSERT INTO fechaasistencia(FechaFechaAsistencia, CursoFechaAsistencia, EstadoFechaAsistencia)
 																	 Values('".$FechaActivar."', ".$Curso.", 'Activada')";
@@ -121,6 +122,10 @@
 							echo "Query: " . $InsertFechaActivada . "\n";
 							echo "Error: " . $mysqli->errno . "\n";
 							exit;
+						}else{
+							echo "<script languaje='javascript'>
+									alert('Fecha activada');
+								  </script>";
 						}
 					}
 				?>

@@ -55,16 +55,10 @@ CREATE TABLE FechaAsistencia(
 )ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_spanish_ci;
 
 CREATE TABLE AsistenciaMarcada(
-	idAsistencia			INTEGER			NOT NULL			PRIMARY KEY			AUTO_INCREMENT,
-	FechaAsistencia			DATE			NOT NULL,
-	EstudianteAsistencia	TINYINT			NOT NULL,
-	CursoAsistencia
-	FechaHoraMarcajeAsistencia	DATETIME	NOT NULL,
-	INDEX (idUsuario),
-	FOREIGN	KEY	(idUsuario)
-        REFERENCES Usuario(idUsuario)
-        ON DELETE CASCADE
-        ON UPDATE NO ACTION
+	idAsistenciaMarcada			INTEGER			NOT NULL			PRIMARY KEY			AUTO_INCREMENT,
+	FechaAsistenciaMarcada			INTEGER			NOT NULL,
+	EstudianteAsistenciaMarcada	INTEGER			NOT NULL,
+	FechaHoraMarcajeAsistenciaMarcada	DATETIME	NOT NULL
 )ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_spanish_ci;
 
 CREATE TABLE Bitacora(
