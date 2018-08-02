@@ -37,7 +37,7 @@
 							if($_SESSION["PrivilegioUsuario"] == 'Superadmin'){
 								?>
 								<li><a href="#">Registrar curso</a></li>
-								<li><a href="RegistrarEstudiante.php">Registrar estudiante</a></li>
+								<li><a href="RegistrarUsuario.php">Registrar usuario</a></li>
 								<li><a href="ActivarFecha.php">ActivarFecha</a></li>
 								<li><a href="DesactivarFecha.php">DesactivarFecha</a></li>
 								<li><a href="AcercaDe.php">Acerca de...</a></li>
@@ -46,7 +46,7 @@
 							}else{
 								?>
 								<li><a href="#">Registrar curso</a></li>
-								<li><a href="RegistrarEstudiante.php">Registrar estudiante</a></li>
+								<li><a href="RegistrarUsuario.php">Registrar usuario</a></li>
 								<li><a href="AcercaDe.php">Acerca de...</a></li>
 								<li><a href="Seguridad/logout.php">Cerrar Sesión</a></li>
 								<?php
@@ -118,11 +118,11 @@
 										$ResultadoConsulta = $mysqli->query($SelectUsuarios);
 										while($row = mysqli_fetch_array($ResultadoConsulta)){
 											// Creamos la consulta
-											$SelectPersona = "SELECT idPersona, NombrePersona FROM persona WHERE idPersona=".$row['idPersona'].";";
+											$SelectPersona = "SELECT idPersona, NombrePersona, ApellidoPersona FROM persona WHERE idPersona=".$row['idPersona'].";";
 											$ResultadoConsulta2 = $mysqli->query($SelectPersona);
 											$row2 = mysqli_fetch_array($ResultadoConsulta2);
 											?>
-											<option value="<?php echo $row2['idPersona']; ?>"><?php echo $row2['NombrePersona']; ?> </option>
+											<option value="<?php echo $row2['idPersona']; ?>"><?php echo $row2['NombrePersona'] . " " . $row2['ApellidoPersona']; ?> </option>
 											<?php
 										}
 									?>

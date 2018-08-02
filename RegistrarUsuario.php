@@ -1,5 +1,5 @@
 <!--
-	Página principal para Registrar un estudiante
+	Página principal para Registrar un usuario
 	Gemis Daniel Guevara Villeda
 	Jueves, 26 de julio del 2018
 	23:03 PM
@@ -37,7 +37,7 @@
 							if($_SESSION["PrivilegioUsuario"] == 'Superadmin'){
 								?>
 								<li><a href="RegistrarCurso.php">Registrar curso</a></li>
-								<li><a href="#">Registrar estudiante</a></li>
+								<li><a href="#">Registrar usuario</a></li>
 								<li><a href="ActivarFecha.php">ActivarFecha</a></li>
 								<li><a href="DesactivarFecha.php">DesactivarFecha</a></li>
 								<li><a href="AcercaDe.php">Acerca de...</a></li>
@@ -46,7 +46,7 @@
 							}else{
 								?>
 								<li><a href="RegistrarCurso.php">Registrar curso</a></li>
-								<li><a href="#">Registrar estudiante</a></li>
+								<li><a href="#">Registrar usuario</a></li>
 								<li><a href="AcercaDe.php">Acerca de...</a></li>
 								<li><a href="Seguridad/logout.php">Cerrar Sesión</a></li>
 								<?php
@@ -56,11 +56,11 @@
 				</div>
 				<hr>
 				<div>
-					<form name="CrearUsuario" action="RegistrarEstudiante.php" method="post">
+					<form name="RegistrarUsuario" action="RegistrarUsuario.php" method="post">
 						<div>
 							<!-- Título -->
 							<div>
-								<h1>Registro de estudiante</h1>
+								<h1>Registro de usuario</h1>
 							</div>
 							<div>
 								<h3>Datos del usuario</h3>
@@ -339,7 +339,7 @@
 									exit;
 								}else{
 									echo "<script languaje='javascript'>
-											alert('Estudiante registrado exitosamente');
+											alert('Usuario registrado exitosamente');
 										  </script>";
 								}
 							}

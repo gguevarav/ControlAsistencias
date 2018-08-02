@@ -32,7 +32,7 @@
 				<div>
 					<ul>
 						<li><a href="RegistrarCurso.php">Registrar curso</a></li>
-						<li><a href="RegistrarEstudiante.php">Registrar estudiante</a></li>
+						<li><a href="RegistrarUsuario.php">Registrar usuario</a></li>
 						<li><a href="AcercaDe.php">Acerca de...</a></li>
 						<li><a href="Seguridad/logout.php">Cerrar Sesión</a></li>
 					</ul>

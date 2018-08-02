@@ -51,19 +51,11 @@ CREATE TABLE FechaAsistencia(
 	FechaFechaAsistencia	DATE			NOT NULL,
 	CursoFechaAsistencia	INTEGER			NOT NULL,
 	CatedraticoFechaAsistencia	INTEGER			NOT NULL,
-	EstadoFechaAsistencia	INTEGER			NOT NULL
+	EstadoFechaAsistencia	VARCHAR(15)			NOT NULL
 )ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_spanish_ci;
 
 CREATE TABLE AsistenciaMarcada(
 	idAsistenciaMarcada			INTEGER			NOT NULL			PRIMARY KEY			AUTO_INCREMENT,
 	FechaAsistenciaMarcada			INTEGER			NOT NULL,
-	EstudianteAsistenciaMarcada	INTEGER			NOT NULL,
-	FechaHoraMarcajeAsistenciaMarcada	DATETIME	NOT NULL
-)ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_spanish_ci;
-
-CREATE TABLE Bitacora(
-	idBitacora				INTEGER			NOT NULL			PRIMARY KEY			AUTO_INCREMENT,
-	FechaBitacora			DATETIME		NOT NULL,
-	FechaActivadaBitacora	DATE			NOT NULL,
-	UsuarioBitacora			DATE			NOT NULL
+	EstudianteAsistenciaMarcada	INTEGER			NOT NULL
 )ENGINE = InnoDB CHARSET=utf8 COLLATE utf8_spanish_ci;

@@ -13,9 +13,3 @@ INSERT INTO Persona (NombrePersona, ApellidoPersona, CarnetPersona, CorreoPerson
 
 INSERT INTO Usuario (NombreUsuario, ContraseniaUsuario, idPersona, RolUsuario)
               VALUES('gguevara', 'e60c177bc95bb0d56e2f95ac372bde51', 2, 'Administrador');
-
-INSERT INTO Usuario (NombreUsuario, ContraseniaUsuario, idPersona, RolUsuario)
-              VALUES('gguevara-c', 'e60c177bc95bb0d56e2f95ac372bde51', 2, 'Catedratico');
-			  
-INSERT INTO Usuario (NombreUsuario, ContraseniaUsuario, idPersona, RolUsuario)
-              VALUES('gguevara-e', 'e60c177bc95bb0d56e2f95ac372bde51', 2, 'Estudiante');

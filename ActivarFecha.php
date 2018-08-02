@@ -114,8 +114,8 @@
 						//	$row = mysqli_fetch_array($ResultadoConsulta)
 						
 						// Creamos la consulta para la insersión de los datos
-						$InsertFechaActivada = "INSERT INTO fechaasistencia(FechaFechaAsistencia, CursoFechaAsistencia, EstadoFechaAsistencia)
-																	 Values('".$FechaActivar."', ".$Curso.", 'Activada')";
+						$InsertFechaActivada = "INSERT INTO fechaasistencia(FechaFechaAsistencia, CursoFechaAsistencia, CatedraticoFechaAsistencia, EstadoFechaAsistencia)
+																	 Values('".$FechaActivar."', ".$Curso.", ".$idPersona. ", 'Activada')";
 						
 						if(!$resultado = $mysqli->query($InsertFechaActivada)){
 							echo "Error: La ejecución de la consulta falló debido a: \n";

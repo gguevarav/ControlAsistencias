@@ -157,57 +157,39 @@
 							$SelectInforPersona = "SELECT NombrePersona, ApellidoPersona, CorreoPersona FROM persona WHERE idPersona=".$idPersona.";";
 							$ResultadoSelectInforPersona = $mysqli->query($SelectInforPersona);
 							$ResultadoFila = mysqli_fetch_array($ResultadoSelectInforPersona);
-							$to = "gemisdguevarav@gmail.com";
-
-							//sender
-							$from = "gemisdguevarav@gmail.com";
-							$fromName = 'tarea3.4890132950.net';
-
-							//email subject
-							$subject = "Asistencia del curso " . $row2['NombreCurso'] . " de la fecha " . $row['FechaFechaAsistencia'];
-
-							//email body content
-							$htmlContent = '<h1>PHP Email with Attachment</h1>
-								<p>This email has sent from PHP script with attachment.</p>';
-
-							//header for sender info
-							$headers = "From: $fromName"." <".$from.">";
-
-							//boundary 
-							$semi_rand = md5(time()); 
-							$mime_boundary = "==Multipart_Boundary_x{$semi_rand}x"; 
-
-							//headers for attachment 
-							$headers .= "nMIME-Version: 1.0n" . "Content-Type: multipart/mixed;n" . " boundary='{$mime_boundary}'"; 
-
-							//multipart boundary 
-							$message = "--{$mime_boundary}n" . "Content-Type: text/html; charset='UTF-8'n" .
-							"Content-Transfer-Encoding: 7bitnn" . $htmlContent . "nn"; 
-
-							//preparing attachment
-							if(!empty($archivo_csv) > 0){
-								if(is_file($archivo_csv)){
-									$message .= "--{$mime_boundary}n";
-									$fp =    @fopen($archivo_csv,"rb");
-									$data =  @fread($fp,filesize($archivo_csv));
-
-									@fclose($fp);
-									$data = chunk_split(base64_encode($data));
-									$message .= "Content-Type: application/octet-stream; name='".basename($archivo_csv)."'n" . 
-									"Content-Description: ".basename($archivo_csv)."n" .
-									"Content-Disposition: attachment;n" . " filename='".basename($archivo_csv)."'; size=".filesize($archivo_csv).";n" . 
-									"Content-Transfer-Encoding: base64nn" . $data . "nn";
-								}
-							}
 							
-							$message .= "--{$mime_boundary}--";
-							$returnpath = "-f" . $from;
+							require("phpmailer/class.phpmailer.php"); //Importamos la función PHP class.phpmailer
+							$mail = new PHPMailer();
 
-							//send email
-							$mail = @mail($to, $subject, $message, $headers, $returnpath); 
+							$mail->IsSMTP();
+							$mail->SMTPAuth = true; // True para que verifique autentificación de la cuenta o de lo contrario False
 
-							//email sending status
-							echo $mail?"<h1>Mail sent.</h1>":"<h1>Mail sending failed.</h1>";
+							$mail->SMTPSecure = "ssl";
+							$mail->Host = "smtp.gmail.com";
+							$mail->Port = 465;
+							 
+							//Nuestra cuenta
+							$mail->Username ='info.4890132950.net@gmail.com';
+							$mail->Password = 'Alovelyday_0295'; //Su password
+							$mail->From = "info.4890132950.net@gmail.com";
+							$mail->FromName = "Control de Asistencias - UMG";
+							$mail->Subject = "Reporte de asistencias del curso " . $row2['NombreCurso'] . " de la fecha " . $row['FechaFechaAsistencia'];
+							$mail->AddAddress($ResultadoFila['CorreoPersona'], $ResultadoFila['NombrePersona'] . " " . $ResultadoFila['ApellidoPersona']);
+							$mail->AddAttachment($archivo_csv);
+
+							$mail->WordWrap = 50;
+
+							$body = "Reporte de asistencias del curso " . $row2['NombreCurso'] . " de la fecha " . $row['FechaFechaAsistencia'];
+
+							$mail->Body = $body;
+
+							// Notificamos al usuario del estado del mensaje
+
+							if(!$mail->Send()){
+							echo "No se pudo enviar el Mensaje.";
+							}else{
+							//echo "Mensaje enviado";
+							}
 							echo "<script languaje='javascript'>
 									alert('Fecha desactivada');
 								  </script>";
