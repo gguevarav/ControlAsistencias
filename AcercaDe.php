@@ -63,7 +63,8 @@
 							<h4>Morales Izabal</h4>
 							<h4>Gemis Daniel Guevara Villeda</h4>
 							<h4>4890-13-2950</h4>
-							<h4>Copyright &copy; 2018 &middot; All Rights Reserved<h4>
+							<h4>Copyright &copy; 2018 &middot; All Rights ReservedReserved<h4>
+							<h4><a href="Documentos/manual.pdf" >Ver Manual</a><h4>
 						</div>
 					</div>
 				</div>
