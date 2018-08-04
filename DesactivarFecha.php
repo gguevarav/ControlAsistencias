@@ -127,36 +127,24 @@
 							$ResultadoConsultaNombreCurso = $mysqli->query($ConsultaNombreCurso);
 							$row2 = mysqli_fetch_array($ResultadoConsultaNombreCurso);
 							
-							// Carpeta que contiene los archivos
-							$Carpeta = "reportes/";
-							
-							// Nombre del archivo
-							$archivo_csv = $Carpeta . "asistencia_".$row2['NombreCurso']."_".$row['FechaFechaAsistencia'].".csv";
-							// Creamos el archivo
-							$csv = fopen($archivo_csv, 'x+');
-							// Insertamos to títulos del archivo
-							fputcsv($csv,array ('Carnet','Nombre','Curso'));
 							// Consulta para obtener el estudiante
 							$ConsultaAsistencias = "SELECT EstudianteAsistenciaMarcada FROM asistenciamarcada WHERE FechaAsistenciaMarcada=".$FechaDesactivar.";";
 							$ResultadoConsultaAsistencias = $mysqli->query($ConsultaAsistencias);
-							// Escribimos el archivo
+							
+							$ContenidoTabla = "";
+							
 							while ($fila = mysqli_fetch_array($ResultadoConsultaAsistencias)) {
 								$EstudianteAsistenciaMarcada = $fila['EstudianteAsistenciaMarcada'];
 								// Consulta donde obtendremos el nombre, apellido y carnet del estudiante
 								$SelectInfoEstudiante = "SELECT NombrePersona, ApellidoPersona, CarnetPersona FROM persona WHERE idPersona=".$EstudianteAsistenciaMarcada.";";
 								$ResultadoSelectInfoEstudiante = $mysqli->query($SelectInfoEstudiante);
 								$fila2 = mysqli_fetch_array($ResultadoSelectInfoEstudiante);
-								// Insertamos la informacion en el archivo
-								fputcsv($csv, array($fila2['CarnetPersona'],$fila2['NombrePersona'] . " " . $fila2['ApellidoPersona'],$row2['NombreCurso']));
+								$ContenidoTabla .= "<tr>";
+								$ContenidoTabla .= "<td><span id='".$fila2['CarnetPersona']."'>".$fila2['CarnetPersona']."</span></td>";
+								$ContenidoTabla .= "<td><span id='".$fila2['NombrePersona']."'>".$fila2['NombrePersona'] . " " . $fila2['ApellidoPersona']."</span></td>";
+								$ContenidoTabla .= "<td><span id='".$row2['NombreCurso']."'>".$row2['NombreCurso']."</span></td>";
+								$ContenidoTabla .= "</tr>";
 							}
-							// Cerramos el archivo
-							fclose($csv);
-							// Enviamos el archivo por correo
-							//recipient
-							// Primero obtendremos la info del usuario para poder enviar el correo
-							$SelectInforPersona = "SELECT NombrePersona, ApellidoPersona, CorreoPersona FROM persona WHERE idPersona=".$idPersona.";";
-							$ResultadoSelectInforPersona = $mysqli->query($SelectInforPersona);
-							$ResultadoFila = mysqli_fetch_array($ResultadoSelectInforPersona);
 							
 							require("phpmailer/class.phpmailer.php"); //Importamos la función PHP class.phpmailer
 							$mail = new PHPMailer();
@@ -167,7 +155,12 @@
 							$mail->SMTPSecure = "ssl";
 							$mail->Host = "smtp.gmail.com";
 							$mail->Port = 465;
-							 
+							
+							// Obtenemos la información de la persona
+							$SelectInforPersona = "SELECT NombrePersona, ApellidoPersona, CorreoPersona FROM persona WHERE idPersona=".$idPersona.";";
+							$ResultadoSelectInforPersona = $mysqli->query($SelectInforPersona);
+							$ResultadoFila = mysqli_fetch_array($ResultadoSelectInforPersona);
+							
 							//Nuestra cuenta
 							$mail->Username ='info.4890132950.net@gmail.com';
 							$mail->Password = 'Alovelyday_0295'; //Su password
@@ -175,20 +168,147 @@
 							$mail->FromName = "Control de Asistencias - UMG";
 							$mail->Subject = "Reporte de asistencias del curso " . $row2['NombreCurso'] . " de la fecha " . $row['FechaFechaAsistencia'];
 							$mail->AddAddress($ResultadoFila['CorreoPersona'], $ResultadoFila['NombrePersona'] . " " . $ResultadoFila['ApellidoPersona']);
-							$mail->AddAttachment($archivo_csv);
 
 							$mail->WordWrap = 50;
 
-							$body = "Reporte de asistencias del curso " . $row2['NombreCurso'] . " de la fecha " . $row['FechaFechaAsistencia'];
-
-							$mail->Body = $body;
+							$body = "<html>
+										<head>
+										<title>Reporte de Asistencia</title>
+										<style type='text/css'>
+											#datos {
+												position:absolute;
+												width:780px;
+												left: 164px;
+												top: 316px;
+												text-align: center;
+											}
+											#apDiv1 #form1 table tr td {
+												text-align: center;
+												font-weight: bold;
+											}
+											#apDiv2 {
+												position:absolute;
+												width:49px;
+												height:45px;
+												z-index:2;
+												left: 12px;
+												top: 11px;
+											}
+											#apDiv1 #notificacion table tr td {
+												text-align: center;
+											}
+											#apDiv1 #notificacion table tr td {
+												text-align: left;
+											}
+											#apDiv1 #notificacion table tr td {
+												text-align: center;
+												font-family: Arial, Helvetica, sans-serif;
+											}
+											#apDiv3 {
+												position:absolute;
+												width:833px;
+												height:115px;
+												z-index:1;
+												left: 99px;
+												text-align: center;
+												top: 16px;
+											}
+										</style>
+										</head>
+										<body>
+											<div id='apDiv3'>
+												<table width='100%' border='1' cellpadding='0' cellspacing='0' bordercolor='#000000'>
+													<!-- Título -->
+													<thead>
+														<!-- Contenido -->
+														<tr>
+															<th>Carnet</th>
+															<th>Nombre</th>
+															<th>Curso</th>
+														</tr>
+													</thead>
+													<!-- Cuerpo de la tabla -->
+													<tbody>
+														<td><p>&nbsp;</p>
+														<p style='font-family: Helvetica LT Condensed; color: #008895; font-weight: bold; font-size: 22px; text-align: center;'>Reporte de Asistencia</p></td>
+														'.$ContenidoTabla.'
+													</tbody>
+												</table>
+											</div>								
+										</body>
+										</html>";
+										
+							$mail->msgHTML("<html>
+										<head>
+										<title>Reporte de Asistencia</title>
+										<style type='text/css'>
+											#datos {
+												position:absolute;
+												width:780px;
+												left: 164px;
+												top: 316px;
+												text-align: center;
+											}
+											#apDiv1 #form1 table tr td {
+												text-align: center;
+												font-weight: bold;
+											}
+											#apDiv2 {
+												position:absolute;
+												width:49px;
+												height:45px;
+												z-index:2;
+												left: 12px;
+												top: 11px;
+											}
+											#apDiv1 #notificacion table tr td {
+												text-align: center;
+											}
+											#apDiv1 #notificacion table tr td {
+												text-align: left;
+											}
+											#apDiv1 #notificacion table tr td {
+												text-align: center;
+												font-family: Arial, Helvetica, sans-serif;
+											}
+											#apDiv3 {
+												position:absolute;
+												width:833px;
+												height:115px;
+												z-index:1;
+												left: 99px;
+												text-align: center;
+												top: 16px;
+											}
+										</style>
+										</head>
+										<body>
+											<div id='apDiv3'>
+												<table width='100%' border='1' cellpadding='0' cellspacing='0' bordercolor='#000000'>
+													<!-- Título -->
+													<thead>
+														<!-- Contenido -->
+														<tr>
+															<th>Carnet</th>
+															<th>Nombre</th>
+															<th>Curso</th>
+														</tr>
+													</thead>
+													<!-- Cuerpo de la tabla -->
+													<tbody>
+														".$ContenidoTabla."
+													</tbody>
+												</table>
+											</div>								
+										</body>
+										</html>");
 
 							// Notificamos al usuario del estado del mensaje
 
 							if(!$mail->Send()){
-							echo "No se pudo enviar el Mensaje.";
+								echo "No se pudo enviar el Mensaje.";
 							}else{
-							//echo "Mensaje enviado";
+								echo "Mensaje enviado";
 							}
 							echo "<script languaje='javascript'>
 									alert('Fecha desactivada');
